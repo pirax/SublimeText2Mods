@@ -55,7 +55,7 @@
 			<key>applyEndPatternLast</key>
 			<integer>1</integer>
 			<key>begin</key>
-			<string>\b(?=qr\s*[^\s\w])</string>
+			<string>(?&lt;!{)\b(?=qr\s*[^\s\w])</string>
 			<key>comment</key>
 			<string>string.regexp.compile.perl</string>
 			<key>end</key>
