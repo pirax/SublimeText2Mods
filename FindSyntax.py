@@ -19,7 +19,7 @@ class FindSyntax(sublime_plugin.EventListener):
         if vimregion:
             vim = view.substr(view.line(vimregion))
             v = re.match(r'#\s*vim:\s*ft=(\w+)', vim)
-            print v.group(1)
+            
             if v and v.group(1):
                 syntax = v.group(1)                
                 self.set_syntax(view, syntax)
