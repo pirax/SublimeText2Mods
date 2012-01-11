@@ -17,32 +17,26 @@ class FindSyntax(sublime_plugin.EventListener):
         ## Try to find vim file type marker
         vim_region = view.find('^#\s*vim:\s*ft=', 0)
         
-        ## If found, parse it and set syntax highliting
+        ## If found, parse it and get language name
         if vim_region:
             vim = view.substr(view.line(vim_region))
-            v = re.match(r'#\s*vim:\s*ft=(\w+)', vim)
-            
-            if v and v.group(1):
-                syntax = v.group(1)                
-                self.set_syntax(view, syntax)
-            
-            return
-        
-        ## Try to fing shebang line
-        shebang = view.substr(view.line(0))
+            match = re.match(r'#\s*vim:\s*ft=(\w+)', vim)
+        else:    
+            ## Try to find shebang line
+            shebang = view.substr(view.line(0))
 
-        ## If found, parse it and set syntax highliting
-        if shebang:
-            s = re.match(r'#!\*/?(?:[^/]/)*([^/]+)', shebang)
+            ## If found, parse it and get language name
+            if shebang:
+                match = re.match(r'#!\*/?(?:[^/]/)*([^/]+)', shebang)
 
-            if s and s.group(1):
-                syntax = s.group(1) 
-                self.set_syntax(view, syntax)
-            
-            return
+        ## If any language name was found - try to find and set its syntax
+        if match and match.group(1):
+            syntax = match.group(1)                
+            self.set_syntax(view, syntax)
 
     def set_syntax(self, view, syntax):
         syntax_file = os.path.join('Packages', syntax, syntax + '.tmLanguage')
         
         if os.path.exists(os.path.join(os.path.dirname(sublime.packages_path()), syntax_file)):
             view.set_syntax_file(syntax_file)
+            
